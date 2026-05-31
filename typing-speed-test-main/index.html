@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- displays site properly based on user's device -->
+
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="./assets/images/favicon-32x32.png"
+		/>
+		<link rel="stylesheet" href="./css/header.css" />
+
+		<title>Frontend Mentor | Typing Speed Test</title>
+
+		<!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+		<!-- <style>
+    .attribution { font-size: 0.6875rem; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+    </style> -->
+	</head>
+	<body>
+		<!--! ACÁ EMPIEZA EL HEADER -->
+
+		<div id="main-container">
+			<div id="top-elements">
+				<div id="logo">
+					<img src="/assets/images/logo-large.svg" alt="logo" />
+				</div>
+
+				<div id="pbStatistic">
+					<img
+						src="/assets/images/icon-personal-best.svg"
+						alt="personal best"
+					/>
+					<span class="dark-text">Personal best:</span>
+					<!-- PB -->
+					WPM
+				</div>
+			</div>
+
+			<!--! ESTAS ESTADISTICAS SON DE CUANDO YA JUEGA -->
+			<div id="toolbar">
+				<div id="statistics">
+					<span class="dark-text">WPM:</span>
+					<!-- WPM -->
+					<span class="dark-text">Accuracy:</span>
+					<!-- Accuracy -->
+					<span class="dark-text">Time:</span>
+					<!-- Time -->
+				</div>
+				<!--! ESTAS ESTADISTICAS SON DE CUANDO YA JUEGA -->
+				<div id="toolbar-game-options">
+					<div id="difficulty-list">
+						<span class="dark-text">Difficulty:</span>
+						<input
+							type="radio"
+							name="difficulty"
+							id="Easy"
+							value="Easy"
+							checked
+						/>
+						<label for="Easy">Easy</label>
+
+						<input type="radio" name="difficulty" id="Medium" value="Medium" />
+						<label for="Medium">Medium</label>
+
+						<input type="radio" name="difficulty" id="Hard" value="Hard" />
+						<label for="Hard">Hard</label>
+					</div>
+
+					<div id="modeSelector" class="dark-text">
+						Mode: Timed (60s) Passage
+					</div>
+				</div>
+			</div>
+			<hr />
+			<!--! ACÁ TERMINA EL "HEADER" -->
+			<!-- Passage -->
+			<!--! TODOS ESTOS ESTILOS INLINE SON TEMPORALES -->
+			<div id="game-screen">
+				<!--! ACÁ SE VA A VISUALIZAR EL JUEGO -->
+				<div id="testOutput"></div>
+				<div id="not-started-text">
+					<button id="start-test">Start Typing Test</button>
+					<!--!s ESTILOS TEMPORALES -->
+					<span> Or press Enter and start typing </span>
+				</div>
+			</div>
+
+			<!-- Test Complete Start -->
+
+			<div id="results" style="display: none">
+				Test Complete! Solid run. Keep pushing to beat your high score. WPM:
+				<!-- WPM -->
+				Accuracy:
+				<!-- Accuracy -->
+				Characters:
+				<!-- Correct/Incorrect -->
+
+				Go Again
+
+				<!-- Test Complete End -->
+			</div>
+
+			<footer class="attribution" style="display: none">
+				Challenge by
+				<a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a
+				>. Coded by <a href="#">Your Name Here</a>.
+			</footer>
+		</div>
+
+		<script>
+			const radios = document.querySelectorAll('input[type= "radio"]');
+			const gameScreen = document.getElementById("game-screen");
+			const divNotStarted = document.querySelector("#not-started-text");
+			const testOutput = gameScreen.querySelector("#testOutput");
+			let test;
+			// DIFFICULTY CHOOSER
+			radios.forEach((radio) => {
+				radio.addEventListener("change", async (e) => {
+					test = await getTest();
+					loadGame();
+					console.log("test: ", test);
+				});
+			});
+
+			async function getTest() {
+				const difficulty = document
+					.querySelector('input[type= "radio"]:checked')
+					.value.toLowerCase();
+				const data = await fetch("/data.json");
+				const games = await data.json();
+				const gamesFiltered = games[difficulty];
+				const randomNumber = Math.floor(Math.random() * gamesFiltered.length);
+
+				const randomTest = gamesFiltered[randomNumber];
+				return randomTest;
+			}
+
+			async function loadGame() {
+				if (test === undefined) {
+					test = await getTest();
+				}
+				showTest(test);
+			}
+
+			loadGame();
+
+			function showTest(testToShow) {
+				const prettyText = JSON.stringify(testToShow.text).replace(
+					/^["']|["']$/g,
+					"",
+				);
+				testOutput.innerHTML = prettyText;
+			}
+
+			// STARTGAME
+
+			const startTestBtn = document.querySelector("#start-test");
+			startTestBtn.addEventListener("click", () => {
+				startGame();
+			});
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Enter") {
+					startGame();
+				}
+			});
+
+			function startGame() {
+				divNotStarted.style.display = "none";
+
+				const limit = test.text.length;
+				let currentPosition = 0;
+				let mistakes = new Set();
+
+				document.addEventListener("keydown", (e) => {
+					// FILTRAR TECLAS
+					if (
+						e.key === "Shift" ||
+						e.key === "Ctrl" ||
+						e.key === "Alt" ||
+						e.key === "Meta" ||
+						e.key === "CapsLock"
+					) {
+						return;
+					}
+
+					if (e.key === "Backspace") {
+						if (currentPosition > 0) {
+							currentPosition--;
+							if (mistakes.has(currentPosition + 1)) {
+								mistakes.delete(currentPosition + 1);
+							}
+						}
+					} else if (e.key === " ") {
+						if (e.key !== test.text[currentPosition]) {
+							mistakes.add(currentPosition);
+						}
+						currentPosition++;
+					} else if (e.key.length === 1) {
+						if (e.key !== test.text[currentPosition]) {
+							mistakes.add(currentPosition);
+						}
+						currentPosition++;
+					}
+
+					if (currentPosition === test.text.length && mistakes.size === 0) {
+						checkWin();
+					}
+
+					let resultHTML = "";
+					for (let i = 0; i < limit; i++) {
+						if (mistakes.has(i)) {
+							resultHTML += `<span style="color: red; border-bottom: 2px solid red">${test.text[i]}</span>`;
+						} else if (i < currentPosition) {
+							resultHTML += `<span style="color: #4CAF50">${test.text[i]}</span>`;
+						} else if (i === currentPosition) {
+							resultHTML += `<span style="color: #FFC107; border-bottom: 2px solid #FFC107">${test.text[i]}</span>`;
+						} else {
+							resultHTML += `<span style="color: #9E9E9E">${test.text[i]}</span>`;
+						}
+					}
+					testOutput.innerHTML = resultHTML;
+				});
+
+				function checkWin() {
+					console.log("TE GANASTE UN ABRAZO");
+				}
+			}
+		</script>
+	</body>
+</html>

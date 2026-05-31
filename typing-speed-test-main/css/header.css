@@ -1,0 +1,120 @@
+/*! ESTILOS GENERALES  */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@import url(https://fonts.google.com/specimen/Sora);
+body {
+    background-color: hsl(0, 0%, 7%);
+    font-family: Sora;
+    color: hsl(0, 0%, 100%);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    user-select: none;
+}
+
+.dark-text {
+    color: hsl(240, 3%, 46%)
+}
+
+/*! ESTILOS DE LOS LOS ELEMENTOS SUPERIORES  */
+
+#main-container {
+    padding: 5rem;  /* 5 rem === 80px */
+    width: 90rem;
+}
+
+#top-elements {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+/*! ESTA PARTE YA NO ES DEL HEADER O LOS ELEMENTOS SUPERIORES*/
+/*! ACÁ VAN A ESTAR LOS ELEMENTOS COMO LAS ESTADISTICAS*/
+
+#toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+#statistics {   
+    display: flex;
+    gap: .5 rem;
+}
+/*! OPCIONES DEL JUEGO */
+
+#toolbar-game-options {
+    display: flex;
+    justify-content: space-between;
+    width: fit-content;
+    gap: .9rem;
+}
+
+#difficulty-list input[type= "radio"] {
+    /* opacity: 0; */
+    color: indianred;
+}
+
+
+#difficulty-list input[type= "radio"]:checked + label {
+    border: 1px hsl(210, 100%, 65%) solid;
+    color: hsl(210, 100%, 65%)
+}
+#difficulty-list label {
+    border: 1px hsl(240, 1%, 59%) solid;
+    border-radius: .5rem;
+    padding: .4rem;
+    padding-left: .7rem;
+    padding-right: .7rem;
+}
+
+hr {
+    margin: 1rem 0rem;
+    width: 100%;
+}
+
+/*! TEXTO DEL JUEGO (SIN INICIAR)*/
+
+#game-screen {
+    position: relative;
+    height: 3rem;
+    height: 20rem;
+}
+
+#not-started-text{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+    backdrop-filter: blur(.4rem);
+}
+
+#not-started-text button {
+    background-color: hsl(214, 100%, 55%);
+    border: none;
+    border-radius: 8px;
+    padding: .5rem;
+    color: inherit;
+}
+
+#testOutput {
+    font-size: xx-large;
+    padding: .5rem;
+}
+
+
+
