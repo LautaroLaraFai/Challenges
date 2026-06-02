@@ -85,7 +85,6 @@
 			<!-- MODALS -->
 			<div id="completeResults">
 				<span id="testSuccessText"></span>
-				Accuracy: Characters: Go Again
 			</div>
 			<div id="testFailed">
 				<p>You failed :(</p>
@@ -172,21 +171,29 @@
 			function messageDispatcher(mistakes, currentPosition) {
 				const finalWPM = calcWPM(mistakes, currentPosition);
 				const isFirstWin = personalBest === -1;
+				const statistics = getStatistics();
+				console.log(statistics);
+				const { accuracyinUI, time } = statistics;
+				console.log(accuracyinUI);
+				console.log(time);
+
+				const messageStatistic = ` Accuracy: ${accuracyinUI} time: ${time} `;
 
 				if (isFirstWin) {
 					setNewPB(finalWPM);
-					return "Baseline established! You've set the bar. Now the real challenge begins--Time to beat it";
+					return `Baseline established! You've set the bar. Now the real challenge begins--Time to beat it ${messageStatistic}`;
 				}
 
 				if (finalWPM > personalBest) {
 					setNewPB(finalWPM);
-					return ` New Personal Best! ${finalWPM} WPM! `;
+					return ` New Personal Best! ${finalWPM} WPM! ${messageStatistic} `;
 				}
 
-				return `Test Complete! WPM: ${finalWPM} | Best: ${personalBest} WPM`;
+				return `Test Complete! WPM: ${finalWPM} ${messageStatistic}	`;
 			}
 
 			function checkWin(mistakes, currentPosition) {
+				clearInterval(timer);
 				message = messageDispatcher(mistakes, currentPosition);
 				testSuccessText.textContent = message;
 				winModal.style.display = "flex";
@@ -194,7 +201,7 @@
 				setTimeout(() => {
 					winModal.style.display = "none";
 					restartGame();
-				}, 3000);
+				}, 10000);
 			}
 
 			function restartGame() {
@@ -375,6 +382,13 @@
 				renderGame();
 			}
 
+			function getStatistics() {
+				accuracyinUI = accuracyElement.textContent;
+				const time = getTranscurredTime();
+				console.log(accuracyinUI);
+				console.log(time);
+				return { accuracyinUI, time };
+			}
 			function renderWPM(mistakes, currentPosition, wpmElement) {
 				const wpm = calcWPM(mistakes, currentPosition);
 				if (wpmElement) wpmElement.textContent = wpm;
