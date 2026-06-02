@@ -23,6 +23,10 @@ body {
     color: hsl(240, 3%, 46%)
 }
 
+.red-text{
+    color: hsl(354, 63%, 57%);
+}
+
 /*! ESTILOS DE LOS LOS ELEMENTOS SUPERIORES  */
 
 #main-container {
@@ -58,17 +62,17 @@ body {
     gap: .9rem;
 }
 
-#difficulty-list input[type= "radio"] {
-    /* opacity: 0; */
+input[type= "radio"] {
+    opacity: 0;
     color: indianred;
 }
 
 
-#difficulty-list input[type= "radio"]:checked + label {
+input[type= "radio"]:checked + label {
     border: 1px hsl(210, 100%, 65%) solid;
     color: hsl(210, 100%, 65%)
 }
-#difficulty-list label {
+label {
     border: 1px hsl(240, 1%, 59%) solid;
     border-radius: .5rem;
     padding: .4rem;
@@ -113,8 +117,73 @@ hr {
 
 #testOutput {
     font-size: xx-large;
-    padding: .5rem;
+    padding: 4rem;
 }
 
+/*! MODALS */
+/*! FAILURE MODAL */
+#testFailed::before {
+    content: "";
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: -100;
+}
 
+#testFailed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: xx-large;
+    padding: 2rem;
+    border-radius: 1rem;
+    z-index: 100000;
+    width: 300px;
+    text-align: center;
+}
 
+#testFailed button {
+    background-color: hsl(214, 100%, 55%);
+    border: none;
+    border-radius: 8px;
+    padding: .5rem 1rem;
+    color: white;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+/*! SUCCESS MODAL */
+#completeResults::before {
+    content: "";
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: -1;
+}
+#completeResults {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: xx-large;
+    padding: 2rem;
+    border-radius: 1rem;
+    z-index: 100000;
+    width: 10em;
+    height: 20em;
+    text-align: center;
+}
