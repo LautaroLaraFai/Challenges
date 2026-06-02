@@ -27,7 +27,6 @@
 					<span class="dark-text"
 						>Personal best: <span id="personal-best-display"> </span>
 					</span>
-					WPM
 				</div>
 			</div>
 
@@ -160,7 +159,6 @@
 			function setNewPB(newPB) {
 				localStorage.setItem("pb", newPB);
 				personalBest = newPB;
-				console.log("cambió localstorage", newPB);
 				renderPB(newPB);
 			}
 
