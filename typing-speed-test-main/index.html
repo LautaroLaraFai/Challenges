@@ -25,7 +25,9 @@
 						alt="personal best"
 					/>
 					<span class="dark-text"
-						>Personal best: <span id="personal-best-display"> </span>
+						>Personal best:
+						<span id="personal-best-display" style="color: hsl(0, 0%, 100%)">
+						</span>
 					</span>
 				</div>
 			</div>
@@ -131,6 +133,7 @@
 				const stored = localStorage.getItem("pb");
 				return stored ? parseInt(stored) : -1;
 			})();
+			renderPB(personalBest);
 
 			// ========== UTILITIES ==========
 			function formatTime(seconds) {
